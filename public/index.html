@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Virtual Pong</title>
+    <meta charset='utf-8'>
+  </head>
+  <body>
+    <h1>Play Virtual Pong!</h1>
+    <div id="map"></div>
+    <button id="update">Update Location</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var _map = document.getElementById("map");
+
+      socket.emit("new player");
+
+      //Load and display Google Map
+
+      function updateMap(players){
+        //Reset and update Google Map
+      }
+
+      socket.on("state", function(players){
+        updateMap(players);
+      });
+
+
+      function getLocation(){
+        var ret;
+
+        if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(loc){
+          ret = loc;
+        }, function(){
+          ret = false;
+        });
+
+    } else {
+        _map.innerHTML = "Geolocation is not supported by this browser.";
+    }
+    return ret;
+      }
+
+
+      //Update
+
+      document.getElementById("update").onClick = function(){
+        loc = getLocation();
+        socket.emit("move", loc);
+      }
+
+    </script>
+  </body>
+</html>
